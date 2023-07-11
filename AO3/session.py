@@ -3,6 +3,7 @@ import re
 import time
 from functools import cached_property
 
+import cloudscraper
 import requests
 from bs4 import BeautifulSoup
 
@@ -22,7 +23,7 @@ class GuestSession:
         self.is_authed = False
         self.authenticity_token = None
         self.username = ""
-        self.session = requests.Session()
+        self.session = cloudscraper.create_scraper()
         
     @property
     def user(self):
@@ -160,7 +161,7 @@ class Session(GuestSession):
         self.username = username
         self.url = "https://archiveofourown.org/users/%s"%self.username
         
-        self.session = requests.Session()
+        self.session = cloudscraper.create_scraper()
         
         soup = self.request("https://archiveofourown.org/users/login")
         self.authenticity_token = soup.find("input", {"name": 'authenticity_token'})["value"]
